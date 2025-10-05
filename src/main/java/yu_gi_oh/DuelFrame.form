@@ -87,7 +87,11 @@
         <children>
           <component id="980af" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
             <constraints/>
-            <properties/>
+            <properties>
+              <columns value="0"/>
+              <editable value="true"/>
+              <wrapStyleWord value="false"/>
+            </properties>
           </component>
         </children>
       </scrollpane>
