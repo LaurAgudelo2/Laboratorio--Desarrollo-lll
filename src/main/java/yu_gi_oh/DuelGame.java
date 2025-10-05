@@ -71,7 +71,7 @@ public class DuelGame implements BattleListener {
                     try {
                         Card card = apiClient.fetchRandomMonsterCard();
                         duel.addPlayerCard(card);
-                        publish("✓ Carta jugador: " + card);
+                        publish("Carta jugador: " + card);
                     } catch (Exception ex) {
                         publish("✗ Error cargando carta jugador: " + ex.getMessage());
                     }
@@ -80,9 +80,9 @@ public class DuelGame implements BattleListener {
                     try {
                         Card card = apiClient.fetchRandomMonsterCard();
                         duel.addAiCard(card);
-                        publish("✓ Carta máquina: " + card);
+                        publish("Carta maquina: " + card);
                     } catch (Exception ex) {
-                        publish("✗ Error cargando carta máquina: " + ex.getMessage());
+                        publish("✗ Error cargando carta maquina: " + ex.getMessage());
                     }
                 }
                 return null;
@@ -125,8 +125,8 @@ public class DuelGame implements BattleListener {
             int[] aiIdx = new int[1];
             Card aiAttacker = duel.selectAiRandomCard(aiIdx);
             updateAiCardDisplay(aiIdx[0], aiAttacker);
-            appendLog("Máquina ataca con: " + aiAttacker);
-            appendLog("Elige carta para defender.");
+            appendLog("Maquina ataca con: " + aiAttacker);
+            appendLog("Elige la carta para defenderte.");
         }
     }
 
@@ -137,7 +137,7 @@ public class DuelGame implements BattleListener {
         int[] aiIdx = new int[1];
         Card aiCard = duel.selectAiRandomCard(aiIdx);
         int aiRemoveIdx = aiIdx[0];
-        boolean defenderInDefense = isPlayerAttacker ? random.nextBoolean() : (JOptionPane.showConfirmDialog(gui, "¿Defender en defensa? (Sí/No)", "Posición", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION);
+        boolean defenderInDefense = isPlayerAttacker ? random.nextBoolean() : (JOptionPane.showConfirmDialog(gui, "¿Defender con esa defensa? (Sí/No)", "Posición", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION);
 
         Card attacker = isPlayerAttacker ? playerCard : aiCard;
         Card defender = isPlayerAttacker ? aiCard : playerCard;
@@ -160,7 +160,7 @@ public class DuelGame implements BattleListener {
 
     private String getWinnerString(String turnWinner, boolean isPlayerAttacker) {
         if ("Empate".equals(turnWinner)) return "Empate";
-        return "Attacker".equals(turnWinner) ? (isPlayerAttacker ? "Jugador" : "Máquina") : (isPlayerAttacker ? "Máquina" : "Jugador");
+        return "Attacker".equals(turnWinner) ? (isPlayerAttacker ? "Jugador" : "Maquina") : (isPlayerAttacker ? "Maquina" : "Jugador");
     }
 
     private void updatePlayerCardsDisplay() {
@@ -204,7 +204,7 @@ public class DuelGame implements BattleListener {
 
     private void loadImageToComponent(String url, JComponent component) {
         new SwingWorker<ImageIcon, Void>() {
-            @Override
+
             protected ImageIcon doInBackground() {
                 try {
                     ImageIcon icon = new ImageIcon(new URL(url));
@@ -215,7 +215,7 @@ public class DuelGame implements BattleListener {
                 }
             }
 
-            @Override
+
             protected void done() {
                 try {
                     ImageIcon icon = get();
@@ -243,17 +243,15 @@ public class DuelGame implements BattleListener {
         gui.textArea1.setCaretPosition(gui.textArea1.getDocument().getLength());
     }
 
-    @Override
+
     public void onTurn(Card playerCard, Card aiCard, String winner) {
         appendLog("Jugador: " + playerCard + " vs Máquina: " + aiCard + ". Ganador: " + winner);
     }
-
-    @Override
     public void onScoreChanged(int playerScore, int aiScore) {
-        appendLog("Puntaje: Jugador " + playerScore + " - Máquina " + aiScore);
+        appendLog("Puntaje: Jugador " + playerScore + " - Maquina " + aiScore);
     }
 
-    @Override
+
     public void onDuelEnded(String winner) {
         appendLog("Duelo terminado. Ganador: " + winner);
         JOptionPane.showMessageDialog(gui, "Ganador: " + winner);
@@ -261,13 +259,13 @@ public class DuelGame implements BattleListener {
         enablePlayerCards(false);
     }
 
-    @Override
+
     public void onError(String errorMessage) {
         appendLog("Error: " + errorMessage);
         JOptionPane.showMessageDialog(gui, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    @Override
+
     public void onCardsLoaded() {
         appendLog("Cartas listas.");
     }

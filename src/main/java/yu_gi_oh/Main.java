@@ -14,7 +14,7 @@ public class Main {
 
             // Crear y configurar la GUI
             DuelFrame gui = new DuelFrame();
-            new DuelGame(gui); // Iniciar la lógica del juego
+            new DuelGame(gui); // Iniciar la logica del juego
             gui.setVisible(true); // Mostrar la GUI después de inicializar DuelGame
         });
     }
