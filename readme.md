@@ -26,6 +26,6 @@ final del juego. Gracias a esto, el código queda más modular, fácil de entend
 En resumen, el laboratorio combina una buena estructura lógica con una interfaz atractiva y un manejo eficiente de la información proveniente de la API. 
 
 
-![Interfaz del juego](main/java/yu_gi_oh/imagenes/Eje.png)
-![Interfaz del juego](main/java/yu_gi_oh/imagenes/Fot.png)
-![Interfaz del juego](main/java/yu_gi_oh/imagenes/Scre.png)
+![Interfaz del juego](src/main/java/yu_gi_oh/imagenes/Eje.png)
+![Interfaz del juego](src/main/java/yu_gi_oh/imagenes/Fot.png)
+![Interfaz del juego](src/main/java/yu_gi_oh/imagenes/Scre.png)
