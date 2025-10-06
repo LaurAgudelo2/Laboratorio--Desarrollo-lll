@@ -73,7 +73,7 @@ public class DuelGame implements BattleListener {
                         duel.addPlayerCard(card);
                         publish("Carta jugador: " + card);
                     } catch (Exception ex) {
-                        publish("✗ Error cargando carta jugador: " + ex.getMessage());
+                        publish("Error cargando carta jugador: " + ex.getMessage());
                     }
                 }
                 for (int i = 0; i < 3; i++) {
@@ -82,7 +82,7 @@ public class DuelGame implements BattleListener {
                         duel.addAiCard(card);
                         publish("Carta maquina: " + card);
                     } catch (Exception ex) {
-                        publish("✗ Error cargando carta maquina: " + ex.getMessage());
+                        publish("Error cargando carta maquina: " + ex.getMessage());
                     }
                 }
                 return null;
@@ -97,7 +97,7 @@ public class DuelGame implements BattleListener {
 
             @Override
             protected void done() {
-                appendLog("¡Cartas cargadas!");
+                appendLog("Cartas cargadas");
                 updatePlayerCardsDisplay();
                 updateAiCardsDisplay();
                 setButtonStates(false, true);
@@ -108,7 +108,7 @@ public class DuelGame implements BattleListener {
     private void startDuel() {
         duel.startDuel();
         setButtonStates(false, false);
-        appendLog("=== DUELO INICIADO ===\nPrimero en 2 puntos gana.");
+        appendLog("=== DUELO INICIADO ===\nPrimero en 2 puntos gana");
         executeTurn();
     }
 
@@ -120,36 +120,29 @@ public class DuelGame implements BattleListener {
 
         enablePlayerCards(true);
         if (duel.isPlayerTurn()) {
-            appendLog("Tu turno: Elige carta para atacar.");
+            appendLog("Tu turno: Elige carta para atacar");
         } else {
             int[] aiIdx = new int[1];
             Card aiAttacker = duel.selectAiRandomCard(aiIdx);
             updateAiCardDisplay(aiIdx[0], aiAttacker);
             appendLog("Maquina ataca con: " + aiAttacker);
-            appendLog("Elige la carta para defenderte.");
+            appendLog("Elige carta para defender");
         }
     }
 
     private void playerCardSelected(int index) {
         if (!duel.isGameStarted()) return;
         Card playerCard = duel.getPlayerCards().get(index);
-        boolean isPlayerAttacker = duel.isPlayerTurn();
         int[] aiIdx = new int[1];
         Card aiCard = duel.selectAiRandomCard(aiIdx);
-        int aiRemoveIdx = aiIdx[0];
-        boolean defenderInDefense = isPlayerAttacker ? random.nextBoolean() : (JOptionPane.showConfirmDialog(gui, "¿Defender con esa defensa? (Sí/No)", "Posición", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION);
+        updateAiCardDisplay(aiIdx[0], aiCard);
 
-        Card attacker = isPlayerAttacker ? playerCard : aiCard;
-        Card defender = isPlayerAttacker ? aiCard : playerCard;
-        String turnWinner = duel.calculateWinner(attacker, defender, defenderInDefense);
-
-        updateAiCardDisplay(aiRemoveIdx, aiCard);
-        onTurn(playerCard, aiCard, getWinnerString(turnWinner, isPlayerAttacker));
-        duel.updateScore(turnWinner, isPlayerAttacker);
+        String turnWinner = duel.calculateWinner(playerCard, aiCard, false);
+        onTurn(playerCard, aiCard, turnWinner);
+        duel.updateScore(turnWinner, true);
 
         duel.removePlayerCard(index);
-        duel.removeAiCard(aiRemoveIdx);
-        duel.flipTurn();
+        duel.removeAiCard(aiIdx[0]);
         duel.checkDuelEnd();
         updatePlayerCardsDisplay();
         updateAiCardsDisplay();
@@ -204,18 +197,18 @@ public class DuelGame implements BattleListener {
 
     private void loadImageToComponent(String url, JComponent component) {
         new SwingWorker<ImageIcon, Void>() {
-
+            @Override
             protected ImageIcon doInBackground() {
                 try {
                     ImageIcon icon = new ImageIcon(new URL(url));
                     Image scaled = icon.getImage().getScaledInstance(120, 150, Image.SCALE_SMOOTH);
                     return new ImageIcon(scaled);
                 } catch (Exception e) {
-                    return new ImageIcon(); // Placeholder vacío en error
+                    return new ImageIcon();
                 }
             }
 
-
+            @Override
             protected void done() {
                 try {
                     ImageIcon icon = get();
@@ -243,15 +236,17 @@ public class DuelGame implements BattleListener {
         gui.textArea1.setCaretPosition(gui.textArea1.getDocument().getLength());
     }
 
-
+    @Override
     public void onTurn(Card playerCard, Card aiCard, String winner) {
-        appendLog("Jugador: " + playerCard + " vs Máquina: " + aiCard + ". Ganador: " + winner);
+        appendLog("Jugador: " + playerCard + " vs Maquina: " + aiCard + ". Ganador: " + winner);
     }
+
+    @Override
     public void onScoreChanged(int playerScore, int aiScore) {
         appendLog("Puntaje: Jugador " + playerScore + " - Maquina " + aiScore);
     }
 
-
+    @Override
     public void onDuelEnded(String winner) {
         appendLog("Duelo terminado. Ganador: " + winner);
         JOptionPane.showMessageDialog(gui, "Ganador: " + winner);
@@ -259,14 +254,14 @@ public class DuelGame implements BattleListener {
         enablePlayerCards(false);
     }
 
-
+    @Override
     public void onError(String errorMessage) {
         appendLog("Error: " + errorMessage);
         JOptionPane.showMessageDialog(gui, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-
+    @Override
     public void onCardsLoaded() {
-        appendLog("Cartas listas.");
+        appendLog("Cartas listas");
     }
 }
